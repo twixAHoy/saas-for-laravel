@@ -45,4 +45,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function talks(){
+        return $this->hasMany(Talk::class);
+    }
 }
