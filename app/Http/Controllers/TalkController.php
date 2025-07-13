@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Talk;
+use App\Enums\TalkType;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
 class TalkController extends Controller
@@ -21,7 +23,7 @@ class TalkController extends Controller
      */
     public function create()
     {
-        return view('talks.create');
+        return view('talks.create', ['talk' => new Talk]);
     }
 
     /**
@@ -31,8 +33,8 @@ class TalkController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|max:255',
-            'length' => 'required',
-            'type' => 'required',
+            'length' => '',
+            'type' => ['required', Rule::enum(TalkType::class)],
             'abstract' => '',
             'orgnotes' => '',
         ]);
@@ -56,7 +58,7 @@ class TalkController extends Controller
      */
     public function edit(Talk $talk)
     {
-        //
+        return view('talks.edit', ['talk' => $talk]);
     }
 
     /**
@@ -64,7 +66,18 @@ class TalkController extends Controller
      */
     public function update(Request $request, Talk $talk)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'length' => '',
+            'type' => ['required', Rule::enum(TalkType::class)],
+            'abstract' => '',
+            'orgnotes' => '',
+        ]);
+
+        $talk->update($validated);
+
+        return redirect()->route('talks.show', ['talk' => $talk]);
+
     }
 
     /**
@@ -72,6 +85,11 @@ class TalkController extends Controller
      */
     public function destroy(Talk $talk)
     {
-        //
+        //validate that user has access to the talk
+        if($talk->user_id === Auth::user()->id){
+            $talk->delete();
+        }
+
+        return redirect()->route('talks.index');
     }
 }

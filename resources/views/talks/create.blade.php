@@ -10,7 +10,10 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     {{ __("You're logged in!") }}
-                    @include('talks.template')
+                    <form class="w-full max-w-lg" method="POST" action="{{ route('talks.store')}}"> 
+                        @csrf
+                        @include('talks.template')
+                    </form>
                 </div>
             </div>
         </div>

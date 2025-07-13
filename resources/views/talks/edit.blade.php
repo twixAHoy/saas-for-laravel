@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ $talk->title }}
+            {{ __('Edit talk') }}
         </h2>
     </x-slot>
 
@@ -9,10 +9,11 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    {{ $talk->length }}
-                    <x-delete-item :route="route('talks.delete', ['talk' => $talk])" text="Delete this talk" />
-                    <br>
-                    <a href="{{route('talks.edit', ['talk' => $talk])}}">Edit Talk</a>
+                    <form class="w-full max-w-lg" method="POST" action="{{ route('talks.update', ['talk' => $talk])}}"> 
+                        @csrf
+                        @method('patch')
+                        @include('talks.template')
+                    </form>
                 </div>
             </div>
         </div>
